@@ -43,7 +43,7 @@ function ImprovedMagnitude:Get()
 	else
 		AllUsers = self.Directory:GetChildren()
 	end
-	
+
 	local InRange = {}
 	for _,User in AllUsers do
 		local Character = User
@@ -51,25 +51,29 @@ function ImprovedMagnitude:Get()
 			Character = User.Character
 		end
 		if table.find(self.IgnoreList, Character) then continue end
-		
+
 		if (not Character) or (not Character.Parent) then continue end
-		
+
 		local Humanoid = Character:FindFirstChildWhichIsA("Humanoid")
 		if (not Humanoid) then continue end
-		
+
 		local Pos : CFrame, Size : Vector3 = Character:GetBoundingBox()
 		
-		local MaxDistance = Size.Y
+		local Direction = self.HitPoint - Pos.Position
+
 		if self.MaxDistance > 0 then
-			MaxDistance = self.MaxDistance
+			if Direction.Magnitude <= self.MaxDistance then
+				table.insert(InRange, Character)
+			end
+			
+			continue
 		end
-		
-		local Distance = (self.HitPoint - Pos.Position).Magnitude
-		if Distance <= MaxDistance then
+
+		if ((Direction * Vector3.new(1, 0, 1)).Magnitude <= (Size * Vector3.new(1, 0, 1)).Magnitude) and (math.abs(Direction.Y) <= Size.Y) then
 			table.insert(InRange, Character)
 		end
 	end
-	
+
 	return InRange
 end
 
