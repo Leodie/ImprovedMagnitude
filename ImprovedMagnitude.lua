@@ -61,15 +61,7 @@ function ImprovedMagnitude:Get()
 		
 		local Direction = self.HitPoint - Pos.Position
 
-		if self.MaxDistance > 0 then
-			if Direction.Magnitude <= self.MaxDistance then
-				table.insert(InRange, Character)
-			end
-			
-			continue
-		end
-
-		if ((Direction * Vector3.new(1, 0, 1)).Magnitude <= (Size * Vector3.new(1, 0, 1)).Magnitude) and (math.abs(Direction.Y) <= Size.Y) then
+		if ( math.max(math.abs(Direction.X), math.abs(Direction.Z)) <= math.min(Size.X, Size.Z) + self.MaxDistance ) and ( math.abs(Direction.Y) <= Size.Y/2 ) then
 			table.insert(InRange, Character)
 		end
 	end
